@@ -1,0 +1,10 @@
+{
+  "name": "vedha-reminder-checker",
+  "version": "1.0.0",
+  "description": "Checks Firestore for due Notes reminders and sends via FCM directly (no Cloud Functions)",
+  "main": "check_reminders.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  },
+  "private": true
+}
