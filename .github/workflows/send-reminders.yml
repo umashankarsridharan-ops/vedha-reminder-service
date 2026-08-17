@@ -2,14 +2,21 @@ name: Send Due Reminders
 
 on:
   schedule:
-    # Runs every 5 minutes (GitHub's minimum allowed interval for
-    # scheduled workflows) — reduces the worst-case delay between a
-    # reminder's scheduled_time and when this check finds it, from up
-    # to 15 min down to up to 5 min. Some additional jitter from
-    # GitHub's own scheduler during busy periods is still possible —
-    # that's an inherent trade-off of the free tier, documented by
-    # GitHub itself, not something this workflow can fully control.
+    # Kept as a backup trigger — GitHub's own scheduler can be
+    # significantly delayed for free-tier repos during busy periods
+    # (confirmed via testing — gaps of 1-3+ hours observed instead of
+    # the configured 5 min). The repository_dispatch trigger below
+    # (pinged by an external free cron service) is now the PRIMARY,
+    # more precise trigger.
     - cron: '*/5 * * * *'
+  repository_dispatch:
+    # No 'types' filter — accepts ANY repository_dispatch event.
+    # (Previously filtered to types: [check-reminders], but the
+    # actual event_type sent by cron-job.org apparently wasn't
+    # matching that filter exactly, so dispatches were accepted by
+    # GitHub's API — hence the 204 success responses — but silently
+    # never triggered this workflow. Removing the filter avoids that
+    # entire class of mismatch.)
   workflow_dispatch: # lets you also trigger it manually from the Actions tab, for testing
 
 jobs:
