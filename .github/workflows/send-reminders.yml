@@ -2,9 +2,14 @@ name: Send Due Reminders
 
 on:
   schedule:
-    # Runs every 15 minutes, all day, every day — 100% free on
-    # GitHub's Free plan (well within the included Actions minutes).
-    - cron: '*/15 * * * *'
+    # Runs every 5 minutes (GitHub's minimum allowed interval for
+    # scheduled workflows) — reduces the worst-case delay between a
+    # reminder's scheduled_time and when this check finds it, from up
+    # to 15 min down to up to 5 min. Some additional jitter from
+    # GitHub's own scheduler during busy periods is still possible —
+    # that's an inherent trade-off of the free tier, documented by
+    # GitHub itself, not something this workflow can fully control.
+    - cron: '*/5 * * * *'
   workflow_dispatch: # lets you also trigger it manually from the Actions tab, for testing
 
 jobs:
